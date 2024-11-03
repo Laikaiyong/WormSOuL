@@ -1,4 +1,4 @@
-import { wormhole } from "@wormhole-foundation/sdk";
+import { wormhole, signSendWait } from "@wormhole-foundation/sdk";
 import algorand from "@wormhole-foundation/sdk/algorand";
 import aptos from "@wormhole-foundation/sdk/aptos";
 import cosmwasm from "@wormhole-foundation/sdk/cosmwasm";
