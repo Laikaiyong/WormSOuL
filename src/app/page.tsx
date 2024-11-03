@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { crossChainTransfer } from '@/utils/wormhole';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Connection, PublicKey } from '@solana/web3.js';
 
 import Image from 'next/image';
 
@@ -15,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Slider } from "@/components/ui/slider";
 import { Progress } from "@/components/ui/progress";
 
 
@@ -25,11 +23,7 @@ export default function Home() {
   const [toChain, setToChain] = useState('Aptos');
   const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [memeCoins, setMemeCoins] = useState([
-    { name: 'SOUL1', balance: '1000', icon: 'https://img-cdn.magiceden.dev/rs:fill:400:0:0/plain/https://arweave.net/PysUShwUPfn6ZEDhQODhtXzd9PI2yU-VnZP4MAfa0SY', price: 0.07, trend: 60 },
-    { name: 'SOUL2', balance: '5000000', icon: 'https://img-cdn.magiceden.dev/rs:fill:400:0:0/plain/https://arweave.net/5J6Gmt5xda_Xo9zG4kizSePImrwYMSmaHE39bXMlwf4', price: 0.000008, trend: 45 },
-    { name: 'SOUL3', balance: '420000', icon: 'https://img-cdn.magiceden.dev/rs:fill:400:0:0/plain/https://arweave.net/nGPJTCIh7zFmoPHIErA7AI3VqF-uS3oAVGGT0S3i_cE', price: 0.000001, trend: 75 },
-  ]);
+  const [memeCoins, setMemeCoins] = useState<{ name: string; balance: string; icon: string; price: number; trend: number; }[]>([]);
   const wallet = useWallet();
 
 
@@ -48,6 +42,11 @@ export default function Home() {
       requestAnimationFrame(animate);
     };
     animate();
+    setMemeCoins([
+      { name: 'SOUL1', balance: '1000', icon: 'https://img-cdn.magiceden.dev/rs:fill:400:0:0/plain/https://arweave.net/PysUShwUPfn6ZEDhQODhtXzd9PI2yU-VnZP4MAfa0SY', price: 0.07, trend: 60 },
+      { name: 'SOUL2', balance: '5000000', icon: 'https://img-cdn.magiceden.dev/rs:fill:400:0:0/plain/https://arweave.net/5J6Gmt5xda_Xo9zG4kizSePImrwYMSmaHE39bXMlwf4', price: 0.000008, trend: 45 },
+      { name: 'SOUL3', balance: '420000', icon: 'https://img-cdn.magiceden.dev/rs:fill:400:0:0/plain/https://arweave.net/nGPJTCIh7zFmoPHIErA7AI3VqF-uS3oAVGGT0S3i_cE', price: 0.000001, trend: 75 },
+    ])
   }, []);
 
   const handleTransfer = (e: React.FormEvent) => {

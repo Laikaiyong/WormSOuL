@@ -1,7 +1,4 @@
 import {
-  CircleTransfer,
-  TransactionId,
-  TransferState,
   Wormhole,
   wormhole,
   amount,
