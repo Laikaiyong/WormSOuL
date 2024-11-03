@@ -66,7 +66,12 @@ export default function Home() {
       </Head>
 
       <nav className="flex justify-between items-center p-4 bg-white/10">
-        <h1 className="text-2xl font-bold">Wormhole Transfer</h1>
+        <Image
+          src="/wormsoul.png"
+          width={200}
+          height={70}
+          alt="WormSOuL Logo"
+        />
         <WalletMultiButton />
       </nav>
 
@@ -79,7 +84,7 @@ export default function Home() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          Advanced Wormhole Token Transfer
+          WormSOuL
         </motion.h1>
         
         <motion.form 
