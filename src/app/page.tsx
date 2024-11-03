@@ -93,7 +93,7 @@ export default function Home() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <Select className="text-black"  onValueChange={setFromChain} defaultValue={fromChain}>
+          <Select onValueChange={setFromChain} defaultValue={fromChain}>
             <SelectTrigger className="w-full mb-4">
               <SelectValue placeholder="From Chain" />
             </SelectTrigger>
@@ -107,7 +107,7 @@ export default function Home() {
             </SelectContent>
           </Select>
 
-          <Select className="text-black" onValueChange={setToChain} defaultValue={toChain}>
+          <Select onValueChange={setToChain} defaultValue={toChain}>
             <SelectTrigger className="w-full mb-4">
               <SelectValue placeholder="To Chain" />
             </SelectTrigger>
