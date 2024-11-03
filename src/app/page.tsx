@@ -94,7 +94,7 @@ export default function Home() {
               <SelectValue placeholder="From Chain" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Ethereum">Ethereum</SelectItem>
+              <SelectItem value="Evm">Ethereum</SelectItem>
               <SelectItem value="Solana">Solana</SelectItem>
               <SelectItem value="Avalanche">Avalanche</SelectItem>
               <SelectItem value="Aptos">Aptos</SelectItem>
@@ -108,7 +108,7 @@ export default function Home() {
               <SelectValue placeholder="To Chain" />
             </SelectTrigger>
             <SelectContent>
-            <SelectItem value="Ethereum">Ethereum</SelectItem>
+            <SelectItem value="Evm">Ethereum</SelectItem>
             <SelectItem value="Solana">Solana</SelectItem>
             <SelectItem value="Avalanche">Avalanche</SelectItem>
             <SelectItem value="Aptos">Aptos</SelectItem>
