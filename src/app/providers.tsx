@@ -44,7 +44,6 @@ export const Wallet: FC<{ children: React.ReactNode }> = ({children}) => {
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
-                    <WalletMultiButton />
                     {children}
                 </WalletModalProvider>
             </WalletProvider>
