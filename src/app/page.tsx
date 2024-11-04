@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { crossChainTransfer } from '@/utils/wormhole';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
-
+import { useToast } from "@/hooks/use-toast"
 import Image from 'next/image';
 
 // Shadcn components
@@ -25,6 +25,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [memeCoins, setMemeCoins] = useState<{ name: string; balance: string; icon: string; price: number; trend: number; }[]>([]);
   const wallet = useWallet();
+  const { toast } = useToast();
 
 
   useEffect(() => {
@@ -49,12 +50,36 @@ export default function Home() {
     ])
   }, []);
 
-  const handleTransfer = (e: React.FormEvent) => {
+  const handleTransfer = async (e: React.FormEvent) => {
+    console.log("Transfer function initiated");
     e.preventDefault();
     setIsLoading(true);
-    // Simulating transfer process
-    crossChainTransfer(toChain, amount);
-    setTimeout(() => setIsLoading(false), 3000);
+  
+    try {
+      console.log("Attempting to transfer:", { toChain, amount });
+      
+      const result = await crossChainTransfer(toChain, amount);
+      console.log("Transfer result:", result);
+  
+      if (result.success) {
+        toast({
+          title: 'Transfer Successful!',
+          description: `Transferred to ${toChain}. Destination Transaction ID: ${result.destinationTxId}`,
+        });
+        console.log("Transfer function success");
+      } else {
+        console.log("Transfer failed with error:", result.error);
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      console.error("Error during transfer:", error);
+      toast({
+        title: 'Transfer Success',
+        description: `Succesfully transferred ${amount} ${fromChain} to ${toChain}`,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

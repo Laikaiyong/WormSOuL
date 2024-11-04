@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Wallet } from "./providers";
-
+import { Toaster } from "@/components/ui/toaster"
 // import WormholeConnect, {
 //   WormholeConnectConfig,
 // } from '@wormhole-foundation/wormhole-connect';
@@ -45,6 +45,7 @@ export default function RootLayout({
       <Wallet>
       
       {children}
+      <Toaster />
       </Wallet>
       </body>
     </html>
