@@ -1,6 +1,6 @@
 # WormSOuL
 
-Memecoin Management makes easy with memecoin over crosschain
+Making cross chain transfer seamless and easy
 
 ## Pitch Deck
 https://www.canva.com/design/DAGVZ6mRUtU/Y8yOyAu0ZE99ao2CQuBMDg/view?utm_content=DAGVZ6mRUtU&utm_campaign=designshare&utm_medium=link&utm_source=editor
