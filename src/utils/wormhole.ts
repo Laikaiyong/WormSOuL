@@ -86,115 +86,121 @@ export const initWormhole = async () => {
 
 // Example: crossChainTransfer("Algorand", "0.1") | crossChainTransfer("Sui", "0.001")
 export const crossChainTransfer = async (to: string, inputAmount: string) => {
-    const wh = await initWormhole();
+  const wh = await initWormhole();
+  
+  try {
+      const ctx = wh.getChain("Solana");
+      const rcv = wh.getChain(to as     "Solana" |
+        "Ethereum" |
+        "Terra" |
+        "Bsc" |
+        "Polygon" |
+        "Avalanche" |
+        "Oasis" |
+        "Algorand" |
+        "Aurora" |
+         "Fantom" |
+         "Karura" |
+         "Acala" |
+         "Klaytn" |
+         "Celo" |
+         "Near" |
+         "Moonbeam" |
+         "Neon" |
+         "Terra2" |
+         "Injective" |
+         "Osmosis" |
+         "Sui" |
+         "Aptos" |
+         "Arbitrum" |
+         "Optimism" |
+         "Gnosis" |
+         "Pythnet" |
+         "Xpla" |
+         "Btc" |
+         "Base" |
+         "Sei" |
+         "Rootstock" |
+         "Scroll" |
+         "Mantle" |
+         "Blast" |
+         "Xlayer" |
+         "Linea" |
+         "Berachain" |
+         "Seievm" |
+         "Snaxchain" |
+         "Unichain" |
+         "Worldchain" |
+        "Wormchain" |
+        "Cosmoshub" |
+        "Evmos" |
+        "Kujira" |
+        "Neutron" |
+        "Celestia" |
+        "Stargaze" |
+        "Seda" |
+        "Dymension" |
+        "Provenance" |
+         "Sepolia" |
+         "ArbitrumSepolia" |
+         "BaseSepolia" |
+         "OptimismSepolia" |
+         "Holesky" |
+         "PolygonSepolia" |
+         "MonadDevnet")
 
-    const ctx = wh.getChain("Solana");
-  // EXAMPLE_WORMHOLE_CHAIN
+      const sender = await getSigner(ctx);
+      const receiver = await getSigner(rcv);
 
-  const rcv = wh.getChain(to as     "Solana" |
-    "Ethereum" |
-    "Terra" |
-    "Bsc" |
-    "Polygon" |
-    "Avalanche" |
-    "Oasis" |
-    "Algorand" |
-    "Aurora" |
-     "Fantom" |
-     "Karura" |
-     "Acala" |
-     "Klaytn" |
-     "Celo" |
-     "Near" |
-     "Moonbeam" |
-     "Neon" |
-     "Terra2" |
-     "Injective" |
-     "Osmosis" |
-     "Sui" |
-     "Aptos" |
-     "Arbitrum" |
-     "Optimism" |
-     "Gnosis" |
-     "Pythnet" |
-     "Xpla" |
-     "Btc" |
-     "Base" |
-     "Sei" |
-     "Rootstock" |
-     "Scroll" |
-     "Mantle" |
-     "Blast" |
-     "Xlayer" |
-     "Linea" |
-     "Berachain" |
-     "Seievm" |
-     "Snaxchain" |
-     "Unichain" |
-     "Worldchain" |
-    "Wormchain" |
-    "Cosmoshub" |
-    "Evmos" |
-    "Kujira" |
-    "Neutron" |
-    "Celestia" |
-    "Stargaze" |
-    "Seda" |
-    "Dymension" |
-    "Provenance" |
-     "Sepolia" |
-     "ArbitrumSepolia" |
-     "BaseSepolia" |
-     "OptimismSepolia" |
-     "Holesky" |
-     "PolygonSepolia" |
-     "MonadDevnet")
+      const sndTb = await ctx.getTokenBridge();
+      const transfer = sndTb.transfer(
+          sender.address.address,
+          receiver.address,
+          "native",
+          amount.units(amount.parse(inputAmount, ctx.config.nativeTokenDecimals)),
+      );
 
-  const sender = await getSigner(ctx);
-  const receiver = await getSigner(rcv);
+      // Source chain transaction
+      const sourceTxids = await signSendWait(ctx, transfer, sender.signer);
+      const sourceTxId = sourceTxids[sourceTxids.length - 1]?.txid;
 
-  // Get a Token Bridge contract client on the source
-  const sndTb = await ctx.getTokenBridge();
+      // Get Wormhole message
+      const [whm] = await ctx.parseTransaction(sourceTxId);
+      
+      // Get VAA
+      const vaa = await wh.getVaa(
+          whm!,
+          "TokenBridge:Transfer",
+          60_000,
+      );
 
-  // Create a transaction stream for transfers
-  const transfer = sndTb.transfer(
-    sender.address.address,
-    receiver.address,
-    "native",
-    amount.units(amount.parse(inputAmount, ctx.config.nativeTokenDecimals)),
-  );
+      // Destination chain transaction
+      const rcvTb = await rcv.getTokenBridge();
+      const redeem = rcvTb.redeem(receiver.address.address, vaa!);
+      const destTxids = await signSendWait(rcv, redeem, receiver.signer);
+      const destTxId = destTxids[destTxids.length - 1]?.txid;
 
-  // Sign and send the transaction
-  const txids = await signSendWait(ctx, transfer, sender.signer);
-  console.log("Sent: ", txids);
-
-  // Get the wormhole message id from the transaction
-  const [whm] = await ctx.parseTransaction(txids[txids.length - 1]!.txid);
-  console.log("Wormhole Messages: ", whm);
-
-  // EXAMPLE_WORMHOLE_VAA
-  // Get the VAA from the wormhole message id
-  const vaa = await wh.getVaa(
-    // Wormhole Message ID
-    whm!,
-    // Protocol:Payload name to use for decoding the VAA payload
-    "TokenBridge:Transfer",
-    // Timeout in milliseconds, depending on the chain and network, the VAA may take some time to be available
-    60_000,
-  );
-  // EXAMPLE_WORMHOLE_VAA
-
-  // Now get the token bridge on the redeem side
-  const rcvTb = await rcv.getTokenBridge();
-
-  // Create a transaction stream for redeeming
-  const redeem = rcvTb.redeem(receiver.address.address, vaa!);
-
-  // Sign and send the transaction
-  const rcvTxids = await signSendWait(rcv, redeem, receiver.signer);
-  console.log("Sent: ", rcvTxids);
-
-  // Now get the token bridge on the redeem side
-  const finished = await rcvTb.isTransferCompleted(vaa!);
-  console.log("Transfer completed: ", finished);
+      // Check completion
+      const isCompleted = await rcvTb.isTransferCompleted(vaa!);
+      console.log(whm);
+      // Return all relevant information
+      return {
+          success: true,
+          sourceTxId,
+          destinationTxId: destTxId,
+          sourceChain: "Solana",
+          destinationChain: to,
+          amount: inputAmount,
+          isCompleted,
+          wormholeMessage: whm // Return the entire message object instead of trying to access id
+      };
+  } catch (error) {
+      return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error occurred',
+          sourceChain: "Solana",
+          destinationChain: to,
+          amount: inputAmount
+      };
+  }
 }

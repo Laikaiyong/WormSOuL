@@ -94,7 +94,7 @@ export default function Home() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <Select onValueChange={setFromChain} defaultValue={fromChain}>
-            <SelectTrigger className="w-full mb-4">
+            <SelectTrigger className="w-full mb-4 text-black">
               <SelectValue placeholder="From Chain" />
             </SelectTrigger>
             <SelectContent>
@@ -108,7 +108,7 @@ export default function Home() {
           </Select>
 
           <Select onValueChange={setToChain} defaultValue={toChain}>
-            <SelectTrigger className="w-full mb-4">
+            <SelectTrigger className="w-full mb-4 text-black">
               <SelectValue placeholder="To Chain" />
             </SelectTrigger>
             <SelectContent>
@@ -126,7 +126,7 @@ export default function Home() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Amount"
-            className="mb-4"
+            className="mb-4 text-black"
           />
 
           <Button 
